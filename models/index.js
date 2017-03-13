@@ -10,6 +10,17 @@ var Page = db.define('page', {
   status: {type: Sequelize.ENUM('open', 'closed')},
   date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW}
 }, {
+    hooks: {
+      beforeValidate: function(page){
+        if (!page.title){
+          page.urlTitle = Math.random().toString(36).substring(2, 7);
+        }
+        else {
+          page.urlTitle = page.title.replace(/\s+/g, '_');
+          page.urlTitle.replace(/\W/, '');
+        }
+      }
+    },
   getterMethods: {
     route : function() { return '/wiki/' + this.urlTitle}//is syntax correct?
   }
@@ -24,3 +35,5 @@ module.exports = {
   Page: Page,
   User: User
 };
+
+
