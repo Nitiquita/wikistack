@@ -1,8 +1,9 @@
 const express = require('express');
 //external libraries
+const sequelize = require('sequelize');
 const morgan = require('morgan')
 const nunjucks = require('nunjucks');
-const routes = require("./routes");
+const routes = require("./routes/wiki");
 const wiki = express();
 const models = require('./models/index');
 const bodyParser = require('body-parser');
@@ -20,13 +21,15 @@ wiki.use(express.static(path.join(__dirname, 'public')));
 wiki.use(bodyParser.json());
 wiki.use(bodyParser.urlencoded({extended: true}));
 
-models.User.sync({})
+wiki.use('/wiki', routes)
+
+models.User.sync({force: true})
 .then(function () {
     return models.Page.sync({})
 })
 .then(function () {
     wiki.listen(3000, function () {
-        console.log('Server is listening on port 3001!');
+        console.log('Server is listening on port 3000!');
     });
 })
 .catch(console.error);

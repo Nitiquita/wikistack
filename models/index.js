@@ -1,17 +1,18 @@
 var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack', {
-    //logging: false
+    logging: false
 });
 
 var Page = db.define('page', {
   title: {type: Sequelize.STRING, allowNull: false, defaultValue: 'Wikistack'},
   urlTitle: {type: Sequelize.TEXT, allowNull: false},
-  getterMethods: {
-    route : function() { return '/wiki/' + this.urlTitle}
-  },
   content: {type: Sequelize.TEXT, allowNull: false},
   status: {type: Sequelize.ENUM('open', 'closed')},
   date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW}
+}, {
+  getterMethods: {
+    route : function() { return '/wiki/' + this.urlTitle}//is syntax correct?
+  }
 })
 
 var User = db.define('user', {
